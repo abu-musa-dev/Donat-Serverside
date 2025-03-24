@@ -2,9 +2,11 @@ const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const app = express();
+require('dotenv').config(); // Load environment variables from .env file
+
 const port = 3001;
 
-const uri = "mongodb+srv://abumusa0740:T3Tvf9zKUNGRR9H2@cluster0.ifx11.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ifx11.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -21,6 +23,7 @@ let campaignsCollection, donationsCollection;
 
 app.use(cors());
 app.use(express.json());
+
 
 // Database Connection
 async function connectToDatabase() {
@@ -122,33 +125,49 @@ async function connectToDatabase() {
     });
 
     // Donate to Campaign
-    app.post('/api/donate', async (req, res) => {
-      const { campaignId, amount, donorName, donorEmail } = req.body;
+    app.post("/api/donate", async (req, res) => {
       try {
-        const donationData = {
-          campaignId: new ObjectId(campaignId),
-          amount: parseFloat(amount),
-          donorName: donorName || "Anonymous",
+        const { campaignId, amount, donationTitle, donorName, donorEmail } = req.body;
+    
+        if (!campaignId || !amount || !donorName || !donorEmail) {
+          return res.status(400).json({ message: "All fields are required." });
+        }
+    
+        const donation = {
+          campaignId: new ObjectId(campaignId), // এখানে ObjectId() ব্যবহার করা হয়েছে
+          amount,
+          donorName,
+          donationTitle,
           donorEmail,
           date: new Date(),
         };
-        
-        const result = await donationsCollection.insertOne(donationData);
-        res.status(201).json(result);
+    
+        const result = await donationsCollection.insertOne(donation);
+        res.status(201).json({ message: "Donation successful", insertedId: result.insertedId });
+    
       } catch (error) {
-        res.status(500).send("Error processing donation: " + error.message);
+        console.error("Error in donation route:", error);
+        res.status(500).json({ message: "Server error", error });
       }
     });
+    
+   
+   
+    
 
     // User Donations
     app.get('/api/myDonations/:userEmail', async (req, res) => {
       try {
-        const donations = await donationsCollection.find({ donorEmail: req.params.userEmail }).toArray();
+        // console.log("Requested Email:", req.params.userEmail); // Debugging লাইন
+        const userEmail = req.params.userEmail.trim().toLowerCase(); // স্পেস মুছে দিলাম
+        const donations = await donationsCollection.find({ donorEmail: userEmail }).toArray();
         res.json(donations);
       } catch (error) {
         res.status(500).send("Error fetching user donations: " + error.message);
       }
     });
+    
+    
 
     // Donations for Specific Campaign
     app.get('/api/campaigns/:id/donations', async (req, res) => {
