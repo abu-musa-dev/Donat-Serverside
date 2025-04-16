@@ -181,7 +181,7 @@ async function connectToDatabase() {
   }
 }
 
-// connectToDatabase().catch(console.error);
+connectToDatabase().catch(console.error);
 
 // Start the Server
 app.listen(port, () => {
