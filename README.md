@@ -1,6 +1,6 @@
-# Dream Donation Server
+# Donate Server
 
-Dream Donation is a platform that allows users to create campaigns, donate to them, and track their donations. This server-side application is built using Node.js, Express, and MongoDB, with an API that enables campaign and donation management.
+Donate is a platform that allows users to create campaigns, donate to them, and track their donations. This server-side application is built using Node.js, Express, and MongoDB, with an API that enables campaign and donation management.
 
 ## 🚀 Features
 
