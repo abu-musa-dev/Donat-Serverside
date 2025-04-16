@@ -27,7 +27,7 @@ app.use(express.json());
 // Database Connection
 async function connectToDatabase() {
   try {
-    await client.connect();
+    // await client.connect();
     // console.log("Connected to MongoDB");
     const database = client.db(databaseName);
     campaignsCollection = database.collection(campaignsCollectionName);
