@@ -56,6 +56,11 @@ async function connectToDatabase() {
       }
     });
 
+
+    app.get("/", (req, res) => {
+      res.send("This is donate");
+    });
+    
     // Fetch All Campaigns
     app.get('/api/campaigns', async (req, res) => {
       try {
