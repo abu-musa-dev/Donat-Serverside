@@ -27,8 +27,8 @@ app.use(express.json());
 // Database Connection
 async function connectToDatabase() {
   try {
-    await client.connect();
-    console.log("Connected to MongoDB");
+    // await client.connect();
+    // console.log("Connected to MongoDB");
     const database = client.db(databaseName);
     campaignsCollection = database.collection(campaignsCollectionName);
     donationsCollection = database.collection(donationsCollectionName);
@@ -181,11 +181,10 @@ async function connectToDatabase() {
   }
 }
 
-connectToDatabase().catch(console.error);
+// connectToDatabase().catch(console.error);
 
 // Start the Server
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
-module.exports = app; 
