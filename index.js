@@ -24,7 +24,6 @@ let campaignsCollection, donationsCollection;
 app.use(cors());
 app.use(express.json());
 
-
 // Database Connection
 async function connectToDatabase() {
   try {
@@ -56,11 +55,10 @@ async function connectToDatabase() {
       }
     });
 
-
     app.get("/", (req, res) => {
       res.send("This is donate");
     });
-    
+
     // Fetch All Campaigns
     app.get('/api/campaigns', async (req, res) => {
       try {
@@ -133,46 +131,39 @@ async function connectToDatabase() {
     app.post("/api/donate", async (req, res) => {
       try {
         const { campaignId, amount, donationTitle, donorName, donorEmail } = req.body;
-    
+
         if (!campaignId || !amount || !donorName || !donorEmail) {
           return res.status(400).json({ message: "All fields are required." });
         }
-    
+
         const donation = {
-          campaignId: new ObjectId(campaignId), // এখানে ObjectId() ব্যবহার করা হয়েছে
+          campaignId: new ObjectId(campaignId),
           amount,
           donorName,
           donationTitle,
           donorEmail,
           date: new Date(),
         };
-    
+
         const result = await donationsCollection.insertOne(donation);
         res.status(201).json({ message: "Donation successful", insertedId: result.insertedId });
-    
+
       } catch (error) {
         console.error("Error in donation route:", error);
         res.status(500).json({ message: "Server error", error });
       }
     });
-    
-   
-   
-    
 
     // User Donations
     app.get('/api/myDonations/:userEmail', async (req, res) => {
       try {
-        // console.log("Requested Email:", req.params.userEmail); // Debugging লাইন
-        const userEmail = req.params.userEmail.trim().toLowerCase(); // স্পেস মুছে দিলাম
+        const userEmail = req.params.userEmail.trim().toLowerCase();
         const donations = await donationsCollection.find({ donorEmail: userEmail }).toArray();
         res.json(donations);
       } catch (error) {
         res.status(500).send("Error fetching user donations: " + error.message);
       }
     });
-    
-    
 
     // Donations for Specific Campaign
     app.get('/api/campaigns/:id/donations', async (req, res) => {
