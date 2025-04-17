@@ -1,5 +1,4 @@
-# 🚀 Donate Server – Backend API for Crowdfunding Platform
-
+#  Donate – A Crowdfunding Platform
 **Donate** is a server-side application that powers the Donate crowdfunding platform. It allows users to create and manage donation campaigns, contribute to others, and track donation history. The backend is built using **Node.js**, **Express.js**, and **MongoDB**.
 
 **Live Site (Frontend)**: [https://donat-web.netlify.app/](https://donat-web.netlify.app/)
